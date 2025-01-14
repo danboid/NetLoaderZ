@@ -161,10 +161,10 @@ void printGameInfo() {
 }
 
 //***
-	char GotSpecial;
-	char GotHeader;
-	char MoreData;
-	char AllowFileWrite;
+	bool GotSpecial;
+	bool GotHeader;
+	bool MoreData;
+	bool AllowFileWrite;
 	byte LastError;
 	byte ch;
 	byte NeedZACK;
