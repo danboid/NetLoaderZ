@@ -194,7 +194,7 @@ byte rZModem_ZReceive(void)
     //
 	while(ALLOK && !quit && (tries++ < ZMAX_RETRY))
 	{
-		  wdogtrig();
+		  //wdogtrig();
 		  rZModem_getZMHeader();
 		  if(ALLOK)
 		  {
@@ -261,7 +261,7 @@ void rZModem_getZMHeader(void)
 	{
 	   while(ALLOK && (ch != ZPAD))
 	   {
-			 wdogtrig();
+			 //wdogtrig();
 			 if(ch == CAN)
 			 {
 			    if(++count == 5)
@@ -280,7 +280,7 @@ void rZModem_getZMHeader(void)
 		  rComm_readByte(&ch);
 		  while(ALLOK && (ch == ZPAD))
 		  {
-				wdogtrig();
+				//wdogtrig();
 				rComm_readByte(&ch);
 		  }
 		  if(ALLOK && (ch == ZDLE))
@@ -305,7 +305,7 @@ void rZModem_sendHexHeader(byte hType)
 	word crc = 0;
 	byte i;
 	//
-	wdogtrig();
+	//wdogtrig();
 	switch(hType)
 	{
 	  case ZRINIT :
@@ -335,7 +335,7 @@ void rZModem_sendHexHeader(byte hType)
 	rZModem_sendHexChar();
 	for(i = 0; i < 4; i++)
 	{
-	   	wdogtrig();
+	   	//wdogtrig();
 	   	ch = HeaderData[i];
 		crc = rZModem_crcUpdate(crc, ch);
     	rZModem_sendHexChar();
@@ -360,7 +360,7 @@ void rZModem_getData(void)
 	//
 	while(ALLOK && (i <= 1024) && !quit)
 	{
-		  wdogtrig();
+		  //wdogtrig();
 		  rZModem_getNextDLECh();
 		  if(ALLOK)
 		  {
@@ -418,7 +418,7 @@ void rZModem_receiveFile(void)
 	//
 	while(ALLOK && !quit && (tries++ < ZMAX_RETRY))
 	{
-		  wdogtrig();
+		  //wdogtrig();
 		  rZModem_sendHexHeader(ZRPOS);
 		  rZModem_getZMHeader();
 		  if(ALLOK)
@@ -458,7 +458,7 @@ void rZModem_receiveData(void)
 	MoreData = TRUE;
 	while(ALLOK && !quit)
 	{
-		wdogtrig();
+		//wdogtrig();
 		if(MoreData)
 		{
 		   rZModem_getData();

@@ -97,7 +97,7 @@
 
 // macros
 #define ALLOK  			(LastError == NO_ERROR)
-#define wdogtrig()	wdt_enable(WDTO_1S);
+//#define wdogtrig()	wdt_enable(WDTO_1S);
 
 // include the functions prototypes
 #include "funct.h"
