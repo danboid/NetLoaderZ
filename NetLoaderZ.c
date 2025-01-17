@@ -1,9 +1,7 @@
 /*
- *  NetLoaderZ
+ *  NetLoaderZ - NetLoader using ZModem via Uzebox UART headers.
  *
- * NetLoaderZ is based upon NetLoader by ry755 and also uses code from
- * Radu Hristea's basic implementation of the ZModem protocol for AVR.
- *
+ *  NetLoaderZ is based upon NetLoader by ry755.
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -292,8 +290,8 @@ int main() {
     // Initialize SD card and filesystem
     res = FS_Init(&sd_struct);
     if (res != 0U) {
-        Print(0, 0, txt_sdno);
-        PrintChar(0, 1, res + '0');
+        Print(0, 1, txt_sdno);
+        PrintChar(0, 2, res + '0');
         while(1);
     }
 
@@ -307,14 +305,14 @@ int main() {
         ((u16)('N') << 8) | ((u16)(0)));
 
     if (t32 == 0U) {
-        Print(0, 0, txt_filn);
+        Print(0, 1, txt_filn);
         while(1);
     }
 
     FS_Select_Cluster(&sd_struct, t32);
     FS_Read_Sector(&sd_struct);
 
-    Print(0, 0, txt_zmodem);
+    Print(0, 1, txt_zmodem);
 
     // ZMODEM receive loop
     uint8_t frameType;
