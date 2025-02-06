@@ -73,6 +73,18 @@
 // Buffer size as a constant
 #define BUFFER_SIZE    1024
 
+//Common baud rates
+//In UART double speed mode
+#define UART_300_BAUD    		0 //11931
+#define UART_1200_BAUD   		1 //2982
+#define UART_2400_BAUD   		2 //1490
+#define UART_4800_BAUD  		3 //745
+#define UART_9600_BAUD   		4 //372
+#define UART_19200_BAUD  		5 //185
+#define UART_38400_BAUD  		6 //92
+#define UART_57600_BAUD			7 //61
+#define UART_115200_BAUD		8 //30
+
 // Strings
 static const char txt_sdno[] PROGMEM = "No SD card!";
 static const char txt_filn[] PROGMEM = "File doesn't exist!";
@@ -95,24 +107,14 @@ unsigned int gameYear = 0;
 
 // UART initialization (matching Uzebox defaults)
 void initializeUART(void) {
-    // Configure UART: 115200 baud, 8-bit data, no parity, 1 stop bit
-    #define BAUD 115200
-    //#define F_CPU 28636363UL
-    #include <util/setbaud.h>
-
-    UBRR0H = UBRRH_VALUE;
-    UBRR0L = UBRRL_VALUE;
-
-    #if USE_2X
-    UCSR0A |= (1 << U2X0);
-    #else
-    UCSR0A &= ~(1 << U2X0);
-    #endif
-
-    // Enable receiver and transmitter
-    UCSR0B = (1<<RXEN0) | (1<<TXEN0);
-    // Set frame format: 8 data bits, no parity, 1 stop bit
-    UCSR0C = (1<<UCSZ01) | (1<<UCSZ00);
+    const u16 bauds[]={11931,2982,1490,745,372,185,92,61,30}; //UART baud rate dividers for double speed
+	u16 baud=bauds[UART_57600_BAUD];
+	UBRR0H=(baud>>8);
+	UBRR0L=(baud&0xff);
+	UCSR0A=(1<<U2X0); // double speed mode
+	UCSR0C=(1<<UCSZ01)+(1<<UCSZ00)+(0<<USBS0); //8-bit frame, no parity, 1 stop bit
+	UCSR0B=(1<<RXEN0); //Enable UART RX
+	InitUartRxBuffer();
 }
 
 // CRC functions for ZMODEM
@@ -312,7 +314,7 @@ int main() {
     FS_Select_Cluster(&sd_struct, t32);
     FS_Read_Sector(&sd_struct);
 
-    Print(0, 1, txt_zmodem);
+    Print(1, 1, txt_zmodem);
 
     // ZMODEM receive loop
     uint8_t frameType;
